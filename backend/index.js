@@ -1,6 +1,7 @@
 const express = require('express');
 const app = express();
 const PORT = process.env.PORT || 5000;
+const { generateFile } = require('./generateFile');
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
@@ -8,11 +9,18 @@ app.use(express.json());
 app.get('/', (req, res) => {
     return res.json({ hello: "world!" })
 })
-app.post('/run', (req, res) => {
-    console.log('-------------------------------------')
-    console.log(req.body);
-    console.log('-------------------------------------')
-    return req.json(req.body);
+app.post('/run', async (req, res) => {
+
+    const { language = "cpp", code } = req.body;
+    if (code === undefined) {
+        return res.status(400).json({
+            success: false, error: "Empty code body!"
+        })
+    }
+
+    const filepath = await generateFile(language, code);
+
+    return res.json({ filepath });
 })
 
 
