@@ -8,13 +8,17 @@ const ENDPOINT = import.meta.env.VITE_ENDPOINT
 function App() {
 
   const [code, setCode] = useState('');
+  const [output, setOutput] = useState('');
   const handleSubmit = async () => {
-    console.log(code);
     const payload = {
       language: "cpp", code
     };
-    const output = await axios.post(`${ENDPOINT}/run`, payload);
-    console.log(output);
+    try {
+      const { data } = await axios.post(`${ENDPOINT}/run`, payload);
+      setOutput(data.output);
+    } catch (error) {
+      console.log(error.response.data.error.error);
+    }
   }
 
   return (<>
@@ -26,6 +30,9 @@ function App() {
     <br />
     <button onClick={handleSubmit}
     >Submit</button>
+    <hr />
+    <h3>Output : </h3>
+    <p>{output}</p>
   </>
   )
 }
