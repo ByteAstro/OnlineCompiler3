@@ -18,7 +18,12 @@ function App() {
       const { data } = await axios.post(`${ENDPOINT}/run`, payload);
       setOutput(data.output);
     } catch (error) {
-      console.log(error.response.data.error.error);
+      if (error.response) {
+        const errMsg = error.response.data.error.stderr;
+        setOutput(errMsg);
+      } else {
+        setOutput("Error connecting to sever!");
+      }
     }
   }
 

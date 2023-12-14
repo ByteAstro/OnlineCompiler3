@@ -3,6 +3,7 @@ const cors = require('cors');
 const app = express();
 const { generateFile } = require('./generateFile');
 const { executeCpp } = require('./executeCpp');
+const { executePy } = require('./executePy');
 
 const PORT = process.env.PORT || 5000;
 
@@ -25,7 +26,12 @@ app.post('/run', async (req, res) => {
 
     try {
         const filepath = await generateFile(language, code);
-        const output = await executeCpp(filepath);
+        let output;
+        if (language === "cpp") {
+            output = await executeCpp(filepath);
+        } else if (language === "python") {
+            output = await executePy(filepath);
+        }
         return res.json({ filepath, output });
     } catch (error) {
         return res.status(500).json({ error });
