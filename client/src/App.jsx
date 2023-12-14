@@ -6,7 +6,7 @@ const ENDPOINT = import.meta.env.VITE_ENDPOINT
   || 'http://localhost:5000';
 
 function App() {
-
+  // fucntioanl 
   const [code, setCode] = useState('');
   const [output, setOutput] = useState('');
   const handleSubmit = async () => {
