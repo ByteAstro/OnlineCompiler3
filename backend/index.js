@@ -13,9 +13,10 @@ app.use(express.json());
 app.get('/', (req, res) => {
     return res.json({ hello: "world!" })
 })
-app.post('/run', async (req, res) => {
 
+app.post('/run', async (req, res) => {
     const { language = "cpp", code } = req.body;
+    console.log(language);
     if (code === undefined) {
         return res.status(400).json({
             success: false, error: "Empty code body!"
