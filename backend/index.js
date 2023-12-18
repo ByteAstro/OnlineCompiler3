@@ -7,6 +7,7 @@ dotenv.config();
 const { generateFile } = require('./generateFile');
 const { executeCpp } = require('./executeCpp');
 const { executePy } = require('./executePy');
+const Job = require('./models/Job');
 
 const PORT = process.env.PORT || 5000;
 connectDB();
@@ -30,14 +31,23 @@ app.post('/run', async (req, res) => {
 
     try {
         const filepath = await generateFile(language, code);
+
+        const job = await new Job({ language, filepath }).save();
+        const jobId = job["_id"];
+
+        res.status(201).json({ success: true, jobId });
+        console.log(job);
+
         let output;
         if (language === "cpp") {
             output = await executeCpp(filepath);
         } else if (language === "python") {
             output = await executePy(filepath);
         }
+        console.log({ filepath, output });
         return res.json({ filepath, output });
     } catch (error) {
+        console.log(error);
         return res.status(500).json({ error });
     }
 

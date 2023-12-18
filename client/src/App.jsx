@@ -16,6 +16,7 @@ function App() {
     };
     try {
       const { data } = await axios.post(`${ENDPOINT}/run`, payload);
+      console.log(data);
       setOutput(data.output);
     } catch (error) {
       if (error.response) {
